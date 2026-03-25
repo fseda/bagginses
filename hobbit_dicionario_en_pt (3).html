@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>O Hobbit — Dicionário EN→PT</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #faf7f2;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.1);
+    --border-strong: rgba(0,0,0,0.2);
+    --text-primary: #1a1209;
+    --text-secondary: #6b5c3e;
+    --text-muted: #9c8a6e;
+    --accent: #8b4513;
+    --accent-light: #f5ede3;
+    --font-display: 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia, serif;
+    --font-body: Georgia, 'Times New Roman', serif;
+    --font-ui: system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background: var(--bg);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  .rune-bar {
+    font-size: 22px;
+    letter-spacing: 6px;
+    color: var(--accent);
+    opacity: 0.5;
+    margin-bottom: 0.75rem;
+    user-select: none;
+  }
+
+  h1 {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: normal;
+    color: var(--text-primary);
+    letter-spacing: 0.02em;
+    margin-bottom: 0.4rem;
+  }
+
+  .subtitle {
+    font-family: var(--font-ui);
+    font-size: 13px;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .controls {
+    max-width: 760px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 4px;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  input[type="text"]:focus { border-color: var(--accent); }
+  input[type="text"]::placeholder { color: var(--text-muted); }
+
+  .filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .pill {
+    font-family: var(--font-ui);
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--border-strong);
+    background: var(--surface);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pill:hover { border-color: var(--accent); color: var(--accent); }
+  .pill.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+
+  .table-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  thead {
+    background: var(--accent-light);
+    border-bottom: 1px solid var(--border-strong);
+  }
+
+  th {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+    padding: 10px 14px;
+    text-align: left;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fdf8f2; }
+
+  .en {
+    font-family: var(--font-body);
+    font-weight: bold;
+    color: var(--text-primary);
+    font-size: 14px;
+  }
+
+  .pt {
+    font-family: var(--font-body);
+    color: var(--text-primary);
+    font-size: 14px;
+  }
+
+  .note {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 3px;
+    font-style: italic;
+  }
+
+  .badge {
+    font-family: var(--font-ui);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    display: inline-block;
+    white-space: nowrap;
+    border: 1px solid transparent;
+  }
+  .cat-personagem { background: #e8f0fb; color: #1a4a8a; border-color: #b8d0f5; }
+  .cat-lugar      { background: #e5f5ee; color: #145c3a; border-color: #9adbbe; }
+  .cat-criatura   { background: #fdf0e0; color: #7a4a10; border-color: #f5c87a; }
+  .cat-objeto     { background: #fbe8f0; color: #7a2048; border-color: #f0b0cc; }
+  .cat-outro      { background: #f0ede8; color: #4a3c28; border-color: #c8bfb0; }
+
+  .count {
+    max-width: 760px;
+    margin: 0.75rem auto 0;
+    font-family: var(--font-ui);
+    font-size: 12px;
+    color: var(--text-muted);
+    text-align: right;
+    padding-right: 2px;
+  }
+
+  .empty {
+    padding: 2rem;
+    text-align: center;
+    font-family: var(--font-ui);
+    font-size: 14px;
+    color: var(--text-muted);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="rune-bar">ᚦᚢᚱᛁᚾ · ᛒᛁᛚᛒᛟ · ᛋᛗᚪᚢᚷ</div>
+  <h1>O Hobbit — Dicionário Inglês / Português</h1>
+  <p class="subtitle">Guia de tradução de nomes · Edição inglesa ↔ Edição brasileira</p>
+</header>
+
+<div class="controls">
+  <input type="text" id="search" placeholder="Buscar em inglês ou português…" oninput="render()">
+  <div class="filters" id="filters"></div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th>Inglês (original)</th>
+        <th>Português (tradução)</th>
+        <th>Categoria</th>
+      </tr>
+    </thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <div id="empty" class="empty" style="display:none">Nenhuma entrada encontrada.</div>
+</div>
+<div class="count" id="count"></div>
+
+<script>
+const data = [
+  { en: "Bilbo Baggins", pt: "Bilbo Bolseiro", note: "Protagonista hobbit", cat: "personagem" },
+  { en: "Thorin Oakenshield", pt: "Thorin Escudo de Carvalho", note: "Líder dos anões", cat: "personagem" },
+  { en: "Gandalf", pt: "Gandalf", note: "Nome mantido", cat: "personagem" },
+  { en: "Balin", pt: "Balin", note: "Anão, mantido", cat: "personagem" },
+  { en: "Dwalin", pt: "Dwalin", note: "Anão, mantido", cat: "personagem" },
+  { en: "Fíli", pt: "Fíli", note: "Anão, mantido", cat: "personagem" },
+  { en: "Kíli", pt: "Kíli", note: "Anão, mantido", cat: "personagem" },
+  { en: "Dori", pt: "Dori", note: "Anão, mantido", cat: "personagem" },
+  { en: "Nori", pt: "Nori", note: "Anão, mantido", cat: "personagem" },
+  { en: "Ori", pt: "Ori", note: "Anão, mantido", cat: "personagem" },
+  { en: "Óin", pt: "Óin", note: "Anão, mantido", cat: "personagem" },
+  { en: "Glóin", pt: "Glóin", note: "Pai de Gimli, mantido", cat: "personagem" },
+  { en: "Bifur", pt: "Bifur", note: "Anão, mantido", cat: "personagem" },
+  { en: "Bofur", pt: "Bofur", note: "Anão, mantido", cat: "personagem" },
+  { en: "Bombur", pt: "Bombur", note: "Anão, mantido", cat: "personagem" },
+  { en: "Gollum", pt: "Gollum", note: "Nome mantido", cat: "personagem" },
+  { en: "Smaug", pt: "Smaug", note: "O dragão, mantido", cat: "personagem" },
+  { en: "Beorn", pt: "Beorn", note: "Skin-changer, mantido", cat: "personagem" },
+  { en: "Elrond", pt: "Elrond", note: "Mantido", cat: "personagem" },
+  { en: "Thranduil", pt: "Thranduil", note: "Rei dos elfos da floresta", cat: "personagem" },
+  { en: "Bard the Bowman", pt: "Bard, o Arqueiro", note: "Herói de Cidade do Lago", cat: "personagem" },
+  { en: "The Master of Lake-town", pt: "O Mestre de Cidade do Lago", note: "", cat: "personagem" },
+  { en: "Azog", pt: "Azog", note: "Orc (mais proeminente nos filmes)", cat: "personagem" },
+  { en: "The Necromancer", pt: "O Nigromante", note: "Sauron disfarçado", cat: "personagem" },
+  { en: "Belladonna Took", pt: "Beladona Túk", note: "Mãe de Bilbo", cat: "personagem" },
+  { en: "Thrór", pt: "Thrór", note: "Avô de Thorin", cat: "personagem" },
+  { en: "Thráin", pt: "Thráin", note: "Pai de Thorin", cat: "personagem" },
+  { en: "The Shire", pt: "O Condado", note: "", cat: "lugar" },
+  { en: "Bag End", pt: "Bolsão", note: "Casa de Bilbo; Portugal: 'Fundo do Saco'", cat: "lugar" },
+  { en: "Hobbiton", pt: "Hobbitólia", note: "Vila dos hobbits", cat: "lugar" },
+  { en: "Rivendell", pt: "Valfenda", note: "Lar de Elrond", cat: "lugar" },
+  { en: "The Misty Mountains", pt: "As Montanhas Névoa", note: "Também 'Montanhas Nebulosas'", cat: "lugar" },
+  { en: "Mirkwood", pt: "Trevamata", note: "Floresta sombria dos elfos", cat: "lugar" },
+  { en: "The Lonely Mountain", pt: "A Montanha Solitária", note: "Lar de Smaug / Erebor", cat: "lugar" },
+  { en: "Erebor", pt: "Erebor", note: "Nome élfico da Montanha Solitária", cat: "lugar" },
+  { en: "Lake-town", pt: "Cidade do Lago", note: "Também Esgaroth", cat: "lugar" },
+  { en: "Esgaroth", pt: "Esgaroth", note: "Nome oficial de Lake-town", cat: "lugar" },
+  { en: "Dale", pt: "Vale", note: "Cidade humana próxima a Erebor", cat: "lugar" },
+  { en: "Goblin-town", pt: "Cidade dos Goblins", note: "Nas entranhas das Montanhas Névoa", cat: "lugar" },
+  { en: "The Last Homely House", pt: "A Última Casa Aconchegante", note: "Valfenda", cat: "lugar" },
+  { en: "The Great East Road", pt: "A Grande Estrada do Leste", note: "", cat: "lugar" },
+  { en: "The Long Lake", pt: "O Grande Lago", note: "Onde fica Lake-town", cat: "lugar" },
+  { en: "The Grey Mountains", pt: "As Montanhas Cinzentas", note: "", cat: "lugar" },
+  { en: "The Iron Hills", pt: "As Colinas de Ferro", note: "", cat: "lugar" },
+  { en: "Beorn's Hall", pt: "O Salão de Beorn", note: "", cat: "lugar" },
+  { en: "The Carrock", pt: "O Carrock", note: "Rocha no rio, mantido", cat: "lugar" },
+  { en: "The Forest River", pt: "O Rio da Floresta", note: "", cat: "lugar" },
+  { en: "The Running River", pt: "O Rio Correntoso", note: "", cat: "lugar" },
+  { en: "The Withered Heath", pt: "A Charneca Murcha", note: "Lar original dos dragões", cat: "lugar" },
+  { en: "The Desolation of Smaug", pt: "A Desolação de Smaug", note: "", cat: "lugar" },
+  { en: "The Front Gate", pt: "O Portão Principal", note: "Entrada principal de Erebor", cat: "lugar" },
+  { en: "The Back Door", pt: "A Porta dos Fundos", note: "Entrada secreta de Erebor", cat: "lugar" },
+  { en: "The Secret Door", pt: "A Porta Secreta", note: "Outra designação da entrada oculta", cat: "lugar" },
+  { en: "The Woodland Realm", pt: "O Reino das Florestas", note: "Reino de Thranduil", cat: "lugar" },
+  { en: "Hobbit", pt: "Hobbit", note: "Nome mantido em todas as traduções modernas", cat: "criatura" },
+  { en: "Dwarf / Dwarves", pt: "Anão / Anões", note: "", cat: "criatura" },
+  { en: "Elf / Elves", pt: "Elfo / Elfos", note: "", cat: "criatura" },
+  { en: "Goblin", pt: "Goblin / Gobelim", note: "Tradução mais recente: gobelim", cat: "criatura" },
+  { en: "Orc", pt: "Orc / Orque", note: "Tradução mais recente: orque", cat: "criatura" },
+  { en: "Troll", pt: "Troll", note: "Mantido", cat: "criatura" },
+  { en: "Dragon", pt: "Dragão", note: "", cat: "criatura" },
+  { en: "Eagle / Great Eagles", pt: "Águia / Grandes Águias", note: "", cat: "criatura" },
+  { en: "Warg", pt: "Varg", note: "Lobos gigantes aliados dos orcs", cat: "criatura" },
+  { en: "Skin-changer", pt: "Metamorfo / Mutante de Pele", note: "Beorn", cat: "criatura" },
+  { en: "Spiders of Mirkwood", pt: "As Aranhas de Trevamata", note: "", cat: "criatura" },
+  { en: "Wood-elves", pt: "Elfos da Floresta", note: "", cat: "criatura" },
+  { en: "Stone-giants", pt: "Gigantes de Pedra", note: "", cat: "criatura" },
+  { en: "The One Ring", pt: "O Um Anel", note: "O Anel do Poder", cat: "objeto" },
+  { en: "Sting", pt: "Ferroada", note: "Espada élfica de Bilbo", cat: "objeto" },
+  { en: "Glamdring", pt: "Glamdring", note: "Espada de Gandalf, mantida", cat: "objeto" },
+  { en: "Orcrist", pt: "Orcrist", note: "Espada de Thorin, mantida", cat: "objeto" },
+  { en: "Mithril", pt: "Mithril / Mítril", note: "O metal mais precioso", cat: "objeto" },
+  { en: "The Arkenstone", pt: "A Pedra de Arken", note: "O Coração da Montanha", cat: "objeto" },
+  { en: "The Heart of the Mountain", pt: "O Coração da Montanha", note: "Outro nome da Arkenstone", cat: "objeto" },
+  { en: "The Map of the Lonely Mountain", pt: "O Mapa da Montanha Solitária", note: "", cat: "objeto" },
+  { en: "The Moon-letters", pt: "As Letras da Lua", note: "Inscrições ocultas no mapa", cat: "objeto" },
+  { en: "Mithril coat / coat of rings", pt: "Cota de mithril", note: "Presente de Thorin a Bilbo", cat: "objeto" },
+  { en: "Burglar", pt: "Ladrão / Gatuno", note: "Papel de Bilbo na companhia", cat: "outro" },
+  { en: "The Quest / Quest of Erebor", pt: "A Missão / Jornada de Erebor", note: "", cat: "outro" },
+  { en: "The Battle of Five Armies", pt: "A Batalha dos Cinco Exércitos", note: "", cat: "outro" },
+  { en: "There and Back Again", pt: "Lá e de Volta Outra Vez", note: "Subtítulo do livro", cat: "outro" },
+  { en: "The Riddle Game", pt: "O Jogo de Adivinhações", note: "Bilbo vs Gollum", cat: "outro" },
+  { en: "My Precious", pt: "Meu Precioso", note: "Fala de Gollum sobre o Anel", cat: "outro" },
+  { en: "Thief / Thieving Bagginses", pt: "Ladrão / Bolseiro Ladrão", note: "Gollum referindo-se a Bilbo", cat: "outro" },
+  { en: "Second Breakfast", pt: "Segundo Café da Manhã", note: "Tradição hobbit", cat: "outro" },
+  { en: "Unexpected Party", pt: "A Festa Inesperada", note: "Primeiro capítulo", cat: "outro" },
+  { en: "Halflings", pt: "Pequenos / Mediotinos", note: "Como outros povos chamam os hobbits", cat: "outro" },
+  { en: "Dwarven / Khuzdul", pt: "Língua dos Anões / Khuzdul", note: "", cat: "outro" },
+  { en: "The Crack of Doom", pt: "A Fenda do Destino", note: "Referência a SdA, não O Hobbit", cat: "outro" },
+  { en: "Erebor (Kingdom under the Mountain)", pt: "Erebor (O Reino Sob a Montanha)", note: "", cat: "outro" },
+  { en: "Long-expected Party", pt: "Festa Há Muito Esperada", note: "Abre SdA, não O Hobbit", cat: "outro" },
+];
+
+const cats = ["todos","personagem","lugar","criatura","objeto","outro"];
+const labels = { todos:"Todos", personagem:"Personagens", lugar:"Lugares", criatura:"Criaturas", objeto:"Objetos", outro:"Outros" };
+let active = "todos";
+
+const filtersEl = document.getElementById("filters");
+cats.forEach(c => {
+  const b = document.createElement("button");
+  b.className = "pill" + (c === active ? " active" : "");
+  b.textContent = labels[c];
+  b.onclick = () => {
+    active = c;
+    document.querySelectorAll(".pill").forEach(x => x.classList.remove("active"));
+    b.classList.add("active");
+    render();
+  };
+  filtersEl.appendChild(b);
+});
+
+function render() {
+  const q = document.getElementById("search").value.toLowerCase();
+  const rows = data.filter(d => {
+    const mc = active === "todos" || d.cat === active;
+    const mq = !q || d.en.toLowerCase().includes(q) || d.pt.toLowerCase().includes(q) || (d.note||"").toLowerCase().includes(q);
+    return mc && mq;
+  });
+  const tbody = document.getElementById("tbody");
+  const empty = document.getElementById("empty");
+  if (rows.length === 0) {
+    tbody.innerHTML = "";
+    empty.style.display = "block";
+  } else {
+    empty.style.display = "none";
+    tbody.innerHTML = rows.map(d => `
+      <tr>
+        <td><span class="en">${d.en}</span></td>
+        <td><span class="pt">${d.pt}</span>${d.note ? `<div class="note">${d.note}</div>` : ""}</td>
+        <td><span class="badge cat-${d.cat}">${labels[d.cat]}</span></td>
+      </tr>
+    `).join("");
+  }
+  document.getElementById("count").textContent = `${rows.length} entradas`;
+}
+render();
+</script>
+</body>
+</html>
